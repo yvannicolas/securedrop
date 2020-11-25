@@ -33,6 +33,8 @@ from specialstrings import strings
 messages = cycle(strings)
 replies = cycle(strings)
 
+DEFAULT_SEED = 1312
+
 
 def fraction(s: str) -> float:
     """
@@ -277,6 +279,8 @@ def load(args: argparse.Namespace) -> None:
     """
     Populate the database.
     """
+    random.seed(args.seed)
+
     if not os.environ.get("SECUREDROP_ENV"):
         os.environ["SECUREDROP_ENV"] = "dev"
 
@@ -411,6 +415,12 @@ def arg_parser() -> argparse.ArgumentParser:
         type=fraction,
         default=0.75,
         help=("Fraction of sources with replies"),
+    )
+    parser.add_argument(
+        "--seed",
+        type=non_negative_int,
+        default=DEFAULT_SEED,
+        help=("Random number seed (for reproducible datasets)"),
     )
     return parser
 
